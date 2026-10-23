@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#202124">
+
+<title>ggstuff</title>
+
+<style>
+    :root {
+        color-scheme: dark;
+        --background: #202124;
+        --surface: #303134;
+        --border: #5f6368;
+        --text: #e8eaed;
+        --muted: #9aa0a6;
+        --button: #303134;
+        --accent: #8ab4f8;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--background);
+        color: var(--text);
+        font-family: Arial, Helvetica, sans-serif;
+        display: flex;
+        flex-direction: column;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 20px;
+        padding: 16px 24px;
+        font-size: 13px;
+    }
+
+    .topbar a {
+        color: var(--text);
+    }
+
+    .profile {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #8ab4f8;
+        color: #202124;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 100px 20px 60px;
+    }
+
+    .logo {
+        font-size: clamp(58px, 11vw, 94px);
+        font-weight: 500;
+        letter-spacing: -5px;
+        margin: 0;
+        user-select: none;
+    }
+
+    .logo span:nth-child(1) { color: #4285f4; }
+    .logo span:nth-child(2) { color: #ea4335; }
+    .logo span:nth-child(3) { color: #fbbc05; }
+    .logo span:nth-child(4) { color: #4285f4; }
+    .logo span:nth-child(5) { color: #34a853; }
+    .logo span:nth-child(6) { color: #ea4335; }
+    .logo span:nth-child(7) { color: #8ab4f8; }
+
+    .message {
+        min-height: 25px;
+        margin: 20px 0 30px;
+        color: #fff;
+        font-size: 15px;
+        text-align: center;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+
+    .message.fade {
+        opacity: 0;
+    }
+
+    .search-form {
+        width: min(100%, 584px);
+    }
+
+    .search-box {
+        height: 48px;
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        gap: 12px;
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+
+    .search-box:hover,
+    .search-box:focus-within {
+        background: var(--surface);
+        border-color: transparent;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    .search-icon {
+        width: 18px;
+        height: 18px;
+        color: var(--muted);
+        flex-shrink: 0;
+    }
+
+    #searchInput {
+        width: 100%;
+        min-width: 0;
+        outline: none;
+        border: none;
+        background: transparent;
+        color: var(--text);
+        font-size: 16px;
+    }
+
+    .clear-button {
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 21px;
+        display: none;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 28px;
+    }
+
+    .buttons button {
+        padding: 10px 16px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        background: var(--button);
+        color: var(--text);
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .buttons button:hover {
+        border-color: var(--border);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    .shortcuts {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 35px;
+        max-width: 600px;
+    }
+
+    .shortcut {
+        width: 100px;
+        min-height: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        border-radius: 8px;
+        color: var(--text);
+        font-size: 12px;
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+
+    .shortcut:hover {
+        background: var(--surface);
+        text-decoration: none;
+    }
+
+    .shortcut-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: #303134;
+        display: grid;
+        place-items: center;
+        font-size: 20px;
+        color: var(--accent);
+    }
+
+    footer {
+        background: #171717;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    .footer-country {
+        padding: 15px 30px;
+        border-bottom: 1px solid #3c4043;
+    }
+
+    .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 15px 30px;
+    }
+
+    .footer-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+    }
+
+    .proxy-note {
+        width: min(100%, 584px);
+        margin-top: 35px;
+        padding: 14px 16px;
+        border: 1px solid #3c4043;
+        border-radius: 10px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .proxy-note strong {
+        color: var(--text);
+    }
+
+    @media (max-width: 600px) {
+        main {
+            padding-top: 100px;
+        }
+
+        .logo {
+            letter-spacing: -3px;
+        }
+
+        .footer-links {
+            justify-content: center;
+        }
+
+        .footer-group {
+            justify-content: center;
+        }
+
+        .proxy-note {
+            margin-top: 25px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <a href="https://mail.google.com/">Gmail</a>
+    <a href="https://images.google.com/">Images</a>
+    <a href="https://www.google.com/">Google</a>
+    <div class="profile" title="ggstuff">G</div>
+</header>
+
+<main>
+    <h1 class="logo" aria-label="ggstuff">
+        <span>g</span><span>g</span><span>s</span><span>t</span><span>u</span><span>f</span><span>f</span>
+    </h1>
+
+    <div class="message" id="message" aria-live="polite">
+        joseph, greyson, marvel and mason
+    </div>
+
+    <form class="search-form" id="searchForm">
+        <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+                <circle cx="10.8" cy="10.8" r="6.8"></circle>
+                <path d="m16 16 5 5"></path>
+            </svg>
+
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="Search the web"
+                autocomplete="off"
+                aria-label="Search the web">
+
+            <button class="clear-button" id="clearButton"
+                    type="button" aria-label="Clear search">
+                ×
+            </button>
+        </div>
+
+        <div class="buttons">
+            <button type="submit">Google Search</button>
+            <button type="button" id="luckyButton">I'm Feeling Lucky</button>
+        </div>
+    </form>
+
+    <div class="shortcuts">
+        <a class="shortcut" href="https://www.google.com/">
+            <div class="shortcut-icon">G</div>
+            <span>Google</span>
+        </a>
+
+        <a class="shortcut" href="https://www.youtube.com/">
+            <div class="shortcut-icon">Y</div>
+            <span>YouTube</span>
+        </a>
+
+        <a class="shortcut" href="https://www.wikipedia.org/">
+            <div class="shortcut-icon">W</div>
+            <span>Wikipedia</span>
+        </a>
+
+        <a class="shortcut" href="https://www.roblox.com/">
+            <div class="shortcut-icon">R</div>
+            <span>Roblox</span>
+        </a>
+    </div>
+
+    <div class="proxy-note">
+        <strong>ggstuff search</strong><br>
+        Search the web directly from this page. This is a search interface,
+        not a web proxy. Websites that block embedding may require their
+        own browser tab. A real proxy requires a separate backend server.
+    </div>
+</main>
+
+<footer>
+    <div class="footer-country">Your web, your way</div>
+
+    <div class="footer-links">
+        <div class="footer-group">
+            <a href="https://about.google/">About</a>
+            <a href="https://ads.google.com/">Advertising</a>
+            <a href="https://www.google.com/services/">Business</a>
+        </div>
+
+        <div class="footer-group">
+            <a href="https://policies.google.com/privacy">Privacy</a>
+            <a href="https://policies.google.com/terms">Terms</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const messages = [
+        "joseph, greyson, marvel, and mason",
+        "i know the technique",
+        "chromebooks are so bad",
+        "fern is slow",
+        "are you in school right now?",
+        "do not tell the teach about this site..",
+        "goguardian is worse than linewize",
+        "6x classroom is kinda ass",
+        "lunch is nice",
+        "roblox is impossible to insert on proxy sites",
+        "am i stupid for making this?"
+    ];
+
+    const messageElement = document.getElementById("message");
+    const searchInput = document.getElementById("searchInput");
+    const clearButton = document.getElementById("clearButton");
+    const searchForm = document.getElementById("searchForm");
+    const luckyButton = document.getElementById("luckyButton");
+
+    let messageIndex = 0;
+
+    // Display the first message immediately.
+    messageElement.textContent = messages[0];
+
+    // Change the message every five seconds.
+    setInterval(() => {
+        messageElement.classList.add("fade");
+
+        setTimeout(() => {
+            messageIndex = (messageIndex + 1) % messages.length;
+            messageElement.textContent = messages[messageIndex];
+            messageElement.classList.remove("fade");
+        }, 300);
+    }, 5000);
+
+    // Toggle the clear button.
+    function updateClearButton() {
+        clearButton.style.display =
+            searchInput.value.length > 0 ? "block" : "none";
+    }
+
+    searchInput.addEventListener("input", updateClearButton);
+
+    clearButton.addEventListener("click", () => {
+        searchInput.value = "";
+        updateClearButton();
+        searchInput.focus();
+    });
+
+    // Submit a search using Google.
+    function performSearch(feelingLucky = false) {
+        const query = searchInput.value.trim();
+
+        if (!query) {
+            searchInput.focus();
+            return;
+        }
+
+        const base = feelingLucky
+            ? "https://www.google.com/search?btnI=1&q="
+            : "https://www.google.com/search?q=";
+
+        window.location.href = base + encodeURIComponent(query);
+    }
+
+    searchForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        performSearch(false);
+    });
+
+    luckyButton.addEventListener("click", () => {
+        performSearch(true);
+    });
+</script>
+
+</body>
+</html>
